@@ -14,6 +14,7 @@ var version = "0.0.2"
 
 var ticketWfpCost = int64(500)
 var prizes = []int{3000, 1000, 1000}
+var fileName = "wfp.txt"
 
 type Player struct {
 	Name string
@@ -23,7 +24,7 @@ type Player struct {
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	file := openFile()
+	file := openFile(fileName)
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -71,8 +72,9 @@ func generateTickets(players []*Player, ticketWfpCost int64) []*Player {
 
 	for _, player := range players {
 		numberOfTickets := player.Wfp / ticketWfpCost
-
-		fmt.Printf(playerUrl(player.Name)+" %v\n", numberOfTickets)
+		if numberOfTickets >= 1 {
+			fmt.Printf(playerUrl(player.Name)+" %v\n", numberOfTickets)
+		}
 		for i := int64(0); i < numberOfTickets; i++ {
 			tickets = append(tickets, player)
 		}
@@ -89,7 +91,7 @@ func generateWinners(tickets []*Player) {
 	for i := 0; i < len(prizes); i++ {
 		for len(previousWinners) <= i {
 			winner := random(0, len(tickets))
-			if !stringInSlice(winner, previousWinners) {
+			if !intInSlice(winner, previousWinners) {
 				previousWinners = append(previousWinners, winner)
 				fmt.Println(fmt.Sprintf("%v", prizes[i]) + "c " + playerUrl(tickets[winner].Name))
 				continue
@@ -98,8 +100,8 @@ func generateWinners(tickets []*Player) {
 	}
 }
 
-func openFile() *os.File {
-	file, err := os.Open("wfp.txt")
+func openFile(fileName string) *os.File {
+	file, err := os.Open(fileName)
 	if err != nil {
 		fatalError(err)
 	}
@@ -110,7 +112,7 @@ func random(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-func stringInSlice(a int, list []int) bool {
+func intInSlice(a int, list []int) bool {
 	for _, b := range list {
 		if b == a {
 			return true
