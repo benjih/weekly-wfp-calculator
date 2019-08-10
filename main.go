@@ -50,7 +50,7 @@ func main() {
 	for _, player := range players {
 		numberOfTickets := player.Wfp / 500
 
-		fmt.Printf(player.Name+" %v\n", numberOfTickets)
+		fmt.Printf(playerUrl(player.Name)+" %v\n", numberOfTickets)
 		for i := int64(0); i < numberOfTickets; i++ {
 			tickets = append(tickets, player)
 		}
@@ -70,7 +70,7 @@ func main() {
 			winner := random(0, len(tickets))
 			if !stringInSlice(winner, previousWinners) {
 				previousWinners = append(previousWinners, winner)
-				fmt.Println(fmt.Sprintf("%v", prizes[i]) + "c " + tickets[winner].Name)
+				fmt.Println(fmt.Sprintf("%v", prizes[i]) + "c " + playerUrl(tickets[winner].Name))
 				continue
 			}
 		}
@@ -91,6 +91,10 @@ func stringInSlice(a int, list []int) bool {
 		}
 	}
 	return false
+}
+
+func playerUrl(name string) string {
+	return fmt.Sprintf("[url=https://www.legacy-game.net/profile.php?p=%[1]s]%[1]s[/url]", name)
 }
 
 func waitForClose() {
