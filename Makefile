@@ -1,3 +1,5 @@
+.PHONY: build
+
 build:
 	env GOOS=linux GOARCH=386 go build -o build/weekly-wfp-calculator-linux-386 main.go
 	env GOOS=linux GOARCH=amd64 go build -o build/weekly-wfp-calculator-linux-amd64 main.go
